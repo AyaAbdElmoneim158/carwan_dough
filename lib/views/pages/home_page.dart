@@ -1,10 +1,6 @@
-import 'package:carwan_dough/app_colors.dart';
-import 'package:carwan_dough/cart_page.dart';
-import 'package:carwan_dough/constant.dart';
-import 'package:carwan_dough/menu_details_page.dart';
-import 'package:carwan_dough/shop_page.dart';
-import 'package:carwan_dough/up_down_animation.dart';
-import 'package:flutter/cupertino.dart';
+import 'package:carwan_dough/utils/theme/app_colors.dart';
+import 'package:carwan_dough/utils/app_constant.dart';
+import 'package:carwan_dough/utils/up_down_animation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:carousel_slider/carousel_slider.dart';
@@ -36,25 +32,39 @@ class HomePage extends StatelessWidget {
           ),
           IconButton(
             onPressed: () {
-              Navigator.push(
-                context,
-                CupertinoPageRoute<void>(
-                  builder: (context) => const CartPage(),
-                ),
-              );
+              // Navigator.push(
+              //   context,
+              //   CupertinoPageRoute<void>(
+              //     builder: (context) => const CartPage(),
+              //   ),
+              // );
             },
-            icon: Icon(Icons.article, color: AppColors.white),
+            icon: Image.asset(
+              "assets/images/social/Cart.png",
+              color: AppColors.white,
+              height: 16,
+              // colorFilter:ColorFilter.mode(AppColors.white, BlendMode.clear) ,
+            ),
+
+            // Icon(Icons.article, color: AppColors.white),
           ),
           IconButton(
             onPressed: () {
-              Navigator.push(
-                context,
-                CupertinoPageRoute<void>(
-                  builder: (context) => const ShopPage(),
-                ),
-              );
+              // Navigator.push(
+              //   context,
+              //   CupertinoPageRoute<void>(
+              //     builder: (context) => const ShopPage(),
+              //   ),
+              // );
             },
-            icon: Icon(Icons.shopping_basket, color: AppColors.white),
+            icon: SvgPicture.asset(
+              "assets/images/social/reciept.svg",
+              color: AppColors.white,
+              height: 16,
+              width: 12,
+              // colorFilter:ColorFilter.mode(AppColors.white, BlendMode.clear) ,
+            ),
+            // Icon(Icons.shopping_basket, color: AppColors.white),
           ),
         ],
       ),
@@ -66,7 +76,7 @@ class HomePage extends StatelessWidget {
             HeaderWithLine(title: "Our Menu"),
             //Todo: Menu.card
             SizedBox(
-              height: size.height * 0.3,
+              height: size.height * 0.45,
               child: ListView.separated(
                 scrollDirection: Axis.horizontal,
                 physics: BouncingScrollPhysics(),
@@ -75,16 +85,16 @@ class HomePage extends StatelessWidget {
                 itemCount: menuItems.length,
                 itemBuilder: (context, index) => InkWell(
                   onTap: () {
-                    Navigator.push(
-                      context,
-                      CupertinoPageRoute<void>(
-                        builder: (context) => const MenuDetailsPage(),
-                      ),
-                    );
+                    // Navigator.push(
+                    //   context,
+                    //   CupertinoPageRoute<void>(
+                    //     builder: (context) => const MenuDetailsPage(),
+                    //   ),
+                    // );
                   },
                   child: SizedBox(
-                    width: size.width * 0.5,
-                    // height: size.height * 0.3,
+                    width: size.width * 0.4,
+                    // height: size.height * 0.4,
                     child: Container(
                       decoration: BoxDecoration(boxShadow: [
                         BoxShadow(
@@ -117,6 +127,7 @@ class HomePage extends StatelessWidget {
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
+                            SizedBox(height: size.height * 0.012),
                             Text(
                               menuItems[index]["name"].toString(),
                               style: TextStyle(
@@ -132,7 +143,7 @@ class HomePage extends StatelessWidget {
                               ),
                               child: CarouselSlider(
                                 options: CarouselOptions(
-                                  height: size.height * 0.2,
+                                  height: size.height * 0.3,
                                   viewportFraction: 1,
                                   enableInfiniteScroll: true,
                                   autoPlay: true,
@@ -144,7 +155,8 @@ class HomePage extends StatelessWidget {
                                         return Image.asset(
                                           image,
                                           fit: BoxFit.cover,
-                                          width: double.infinity,
+                                          // width: double.infinity,
+                                          // height: size.height * 0.2,
                                         );
                                       }).toList()
                                     : [
@@ -195,7 +207,7 @@ class Header extends StatelessWidget {
     final size = MediaQuery.of(context).size;
 
     return SizedBox(
-      height: size.height * 0.3,
+      height: size.height * 0.35,
       child: Column(
         // alignment: AlignmentDirectional.bottomEnd,
         // clipBehavior: Clip.none,

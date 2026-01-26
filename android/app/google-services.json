@@ -1,0 +1,154 @@
+{
+  "project_info": {
+    "project_number": "899409460852",
+    "project_id": "testapp-fb888",
+    "storage_bucket": "testapp-fb888.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:899409460852:android:ad5c9491cbec1ec9109b21",
+        "android_client_info": {
+          "package_name": "com.example.app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "899409460852-cijmnp5igfmrnsbjcksjvvh7k3ehlukt.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDeV56StBEmEwSo55y9szjvH3-oPjTZbc0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "899409460852-cijmnp5igfmrnsbjcksjvvh7k3ehlukt.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "899409460852-5a27u9nnn0dje4fif1gdpals4vr27ou3.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.carwanDough"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:899409460852:android:14f1d4fac69f9173109b21",
+        "android_client_info": {
+          "package_name": "com.example.carwan_dough"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "899409460852-cijmnp5igfmrnsbjcksjvvh7k3ehlukt.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDeV56StBEmEwSo55y9szjvH3-oPjTZbc0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "899409460852-cijmnp5igfmrnsbjcksjvvh7k3ehlukt.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "899409460852-5a27u9nnn0dje4fif1gdpals4vr27ou3.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.carwanDough"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:899409460852:android:61126304dfab9d52109b21",
+        "android_client_info": {
+          "package_name": "com.example.mini_whatsapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "899409460852-cijmnp5igfmrnsbjcksjvvh7k3ehlukt.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDeV56StBEmEwSo55y9szjvH3-oPjTZbc0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "899409460852-cijmnp5igfmrnsbjcksjvvh7k3ehlukt.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "899409460852-5a27u9nnn0dje4fif1gdpals4vr27ou3.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.carwanDough"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:899409460852:android:beae9246ac44416f109b21",
+        "android_client_info": {
+          "package_name": "com.example.projects"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "899409460852-cijmnp5igfmrnsbjcksjvvh7k3ehlukt.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDeV56StBEmEwSo55y9szjvH3-oPjTZbc0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "899409460852-cijmnp5igfmrnsbjcksjvvh7k3ehlukt.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "899409460852-5a27u9nnn0dje4fif1gdpals4vr27ou3.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.carwanDough"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

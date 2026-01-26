@@ -1,3 +1,7 @@
+class AppConstant {
+  static const String appName = "carwan_dough";
+}
+
 List<Map<String, Object>> menuItems = [
   {
     "name": "custom orders",
