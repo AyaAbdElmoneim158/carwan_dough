@@ -1,7 +1,11 @@
+import 'package:carwan_dough/controllers/home/home_cubit.dart';
+import 'package:carwan_dough/models/menu_model.dart';
+import 'package:carwan_dough/services/home_services.dart';
 import 'package:carwan_dough/utils/theme/app_colors.dart';
 import 'package:carwan_dough/views/pages/home_page.dart';
 import 'package:crystal_navigation_bar/crystal_navigation_bar.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:iconly/iconly.dart';
 
 enum _SelectedTab { home, cart, order }
@@ -16,7 +20,10 @@ class AppNavigationBar extends StatefulWidget {
 class _AppNavigationBarState extends State<AppNavigationBar> {
   var _selectedTab = _SelectedTab.home;
   List<Widget> pages = [
-    HomePage(),
+    BlocProvider(
+      create: (context) => HomeCubit()..fetchMenu(),
+      child: HomePage(),
+    ),
     Container(),
     Container(),
   ];
@@ -28,6 +35,7 @@ class _AppNavigationBarState extends State<AppNavigationBar> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: AppColors.white,
       extendBody: true,
       body: pages[_selectedTab.index],
       bottomNavigationBar: CrystalNavigationBar(
@@ -66,6 +74,12 @@ class _AppNavigationBarState extends State<AppNavigationBar> {
           ),
         ],
       ),
+      // floatingActionButton: FloatingActionButton(
+      //   onPressed: () {
+      //     HomeServicesImpl().addMenu(MenuModel.menu[3]);
+      //   },
+      //   child: Icon(Icons.add),
+      // ),
     );
   }
 }

@@ -1,9 +1,15 @@
+import 'package:carwan_dough/controllers/home/home_cubit.dart';
+import 'package:carwan_dough/models/menu_model.dart';
 import 'package:carwan_dough/utils/theme/app_colors.dart';
-import 'package:carwan_dough/utils/app_constant.dart';
-import 'package:carwan_dough/utils/up_down_animation.dart';
+import 'package:carwan_dough/views/pages/menu_details_page.dart';
+import 'package:carwan_dough/views/widgets/app_app_bar.dart';
+import 'package:carwan_dough/views/widgets/banner_with_waves.dart';
+import 'package:carwan_dough/views/widgets/footer.dart';
+import 'package:carwan_dough/views/widgets/header_with_line.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
@@ -12,70 +18,74 @@ class HomePage extends StatelessWidget {
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
     return Scaffold(
-      appBar: AppBar(
-        elevation: 0,
-        scrolledUnderElevation: 0,
-        toolbarHeight: size.height * 0.06,
-        backgroundColor: AppColors.red,
-        title: Image.asset(
-          "assets/images/logo.png",
-          height: size.height * 0.05,
-        ),
-        actions: [
-          Text(
-            "Welcome Aya",
-            style: TextStyle(
-              color: AppColors.white,
-              fontSize: 16,
-              fontWeight: FontWeight.w600,
-            ),
-          ),
-          IconButton(
-            onPressed: () {
-              // Navigator.push(
-              //   context,
-              //   CupertinoPageRoute<void>(
-              //     builder: (context) => const CartPage(),
-              //   ),
-              // );
-            },
-            icon: Image.asset(
-              "assets/images/social/Cart.png",
-              color: AppColors.white,
-              height: 16,
-              // colorFilter:ColorFilter.mode(AppColors.white, BlendMode.clear) ,
-            ),
-
-            // Icon(Icons.article, color: AppColors.white),
-          ),
-          IconButton(
-            onPressed: () {
-              // Navigator.push(
-              //   context,
-              //   CupertinoPageRoute<void>(
-              //     builder: (context) => const ShopPage(),
-              //   ),
-              // );
-            },
-            icon: SvgPicture.asset(
-              "assets/images/social/reciept.svg",
-              color: AppColors.white,
-              height: 16,
-              width: 12,
-              // colorFilter:ColorFilter.mode(AppColors.white, BlendMode.clear) ,
-            ),
-            // Icon(Icons.shopping_basket, color: AppColors.white),
-          ),
-        ],
-      ),
+      appBar: AppAppBar(),
       body: SingleChildScrollView(
         child: Column(
           children: [
-            Header(),
-            SizedBox(height: 48),
+            BannerWithWaves(),
             HeaderWithLine(title: "Our Menu"),
+
+            BlocBuilder<HomeCubit, HomeState>(
+              builder: (context, state) {
+                if (state is HomeLoading) {
+                  return Center(child: CupertinoActivityIndicator()); //Todo: shimmer
+                } else if (state is HomeError) {
+                  return Column(
+                    children: [
+                      Image.network('https://cdn-icons-png.flaticon.com/512/4428/4428505.png'),
+                      // https://cdn-icons-png.flaticon.com/512/17985/17985555.png
+                      Text(
+                        "Oops..",
+                        style: Theme.of(context).textTheme.titleLarge!.copyWith(color: AppColors.red),
+                      ),
+                      Text(
+                        state.error,
+                        style: Theme.of(context).textTheme.labelSmall,
+                      ),
+                    ],
+                  );
+                } else if (state is HomeLoaded) {
+                  final menu = state.menu;
+                  if (menu.isEmpty) {
+                    return Column(
+                      children: [
+                        Image.network(
+                          // 'https://cdn-icons-png.flaticon.com/512/7486/7486747.png',
+                          'https://cdn-icons-png.flaticon.com/512/12782/12782267.png',
+
+                          fit: BoxFit.cover,
+                          height: size.height * 0.1,
+                        ),
+                        Text(
+                          "Menu is Empty!",
+                          style: Theme.of(context).textTheme.labelSmall!.copyWith(
+                                color: AppColors.grey,
+                              ),
+                        ),
+                      ],
+                    );
+                  }
+                  return Padding(
+                    padding: const EdgeInsets.all(12),
+                    child: Wrap(
+                      spacing: 16,
+                      runSpacing: 16,
+                      children: List.generate(
+                        menu.length,
+                        (index) {
+                          final item = menu[index];
+                          return MenuItem(item: item);
+                        },
+                      ),
+                    ),
+                  );
+                }
+                return SizedBox.shrink();
+              },
+            ),
+
             //Todo: Menu.card
-            SizedBox(
+            /* SizedBox(
               height: size.height * 0.45,
               child: ListView.separated(
                 scrollDirection: Axis.horizontal,
@@ -93,7 +103,7 @@ class HomePage extends StatelessWidget {
                     // );
                   },
                   child: SizedBox(
-                    width: size.width * 0.4,
+                    width: size.width * 0.6,
                     // height: size.height * 0.4,
                     child: Container(
                       decoration: BoxDecoration(boxShadow: [
@@ -150,8 +160,8 @@ class HomePage extends StatelessWidget {
                                   autoPlayInterval: const Duration(seconds: 2),
                                   autoPlayAnimationDuration: const Duration(milliseconds: 500),
                                 ),
-                                items: (menuItems[index]["images"] as List?)?.isNotEmpty == true
-                                    ? (menuItems[index]["images"] as List).map((image) {
+                                items: (item.images?)?.isNotEmpty == true
+                                    ? (item.images).map((image) {
                                         return Image.asset(
                                           image,
                                           fit: BoxFit.cover,
@@ -176,7 +186,7 @@ class HomePage extends StatelessWidget {
                 ),
               ),
             ),
-
+*/
             /*
                         text-align: center;
           width: 100%;
@@ -199,227 +209,91 @@ class HomePage extends StatelessWidget {
   }
 }
 
-class Header extends StatelessWidget {
-  const Header({super.key});
+class MenuItem extends StatelessWidget {
+  const MenuItem({super.key, required this.item});
+  final MenuModel item;
 
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
 
-    return SizedBox(
-      height: size.height * 0.35,
-      child: Column(
-        // alignment: AlignmentDirectional.bottomEnd,
-        // clipBehavior: Clip.none,
-        children: [
-          Container(
-            padding: EdgeInsets.all(size.width * 0.05),
-            decoration: BoxDecoration(
-              color: AppColors.red,
-            ),
-            child: Center(
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Expanded(
-                    child: Text(
-                      "sugar, spice and\neverything nice",
-                      style: TextStyle(
-                        color: AppColors.white,
-                        fontSize: 42,
-                        fontWeight: FontWeight.w100,
-                      ),
-                    ),
-                  ),
-                  Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Image.asset(
-                            "assets/images/cake1.png",
-                            height: size.height * 0.085,
-                          ).upDown(
-                            offset: 10,
-                            duration: const Duration(seconds: 2),
-                            // phase: 0.3,
-                          ),
-                          const SizedBox(width: 8),
-                          Image.asset(
-                            "assets/images/cina3.png",
-                            height: size.height * 0.085,
-                          ).upDown(
-                            offset: 12,
-                            duration: const Duration(seconds: 2),
-                            // phase: 0.6,
-                          ),
-                        ],
-                      ),
-                      Image.asset(
-                        "assets/images/doug8.png",
-                        height: size.height * 0.085,
-                      ).upDown(
-                        offset: 14,
-                        duration: const Duration(seconds: 2),
-                        // phase: 0.0,
-                      ),
-                    ],
-                  ),
-                ],
-              ),
+    return InkWell(
+      onTap: () {
+        Navigator.push(
+          context,
+          CupertinoPageRoute<void>(
+            builder: (context) => MenuDetailsPage(
+              menu: item,
             ),
           ),
-          // Positioned(
-          //   bottom: -68,
-          //   left: 0,
-          //   right: 0,
-          //   child:
-          // )
-          Image.asset(
-            "assets/images/waves.png",
-            fit: BoxFit.cover,
-            width: double.infinity,
-            height: size.height * 0.1,
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class Footer extends StatelessWidget {
-  const Footer({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    final size = MediaQuery.of(context).size;
-    return Container(
-      padding: EdgeInsets.all(size.width * 0.05),
-      decoration: BoxDecoration(
-        color: AppColors.red,
-      ),
-      child: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          spacing: 12,
-          children: [
-            Image.asset(
-              "assets/images/logo.png",
-              height: size.height * 0.03,
-            ),
-            Text(
-              "Contact Us",
-              style: TextStyle(
-                color: AppColors.white,
-                fontSize: 16,
-                fontWeight: FontWeight.w700,
-              ),
-            ),
-            Text(
-              "Phone: 01556364646 ",
-              style: TextStyle(
-                color: AppColors.white,
-                fontSize: 12,
-                fontWeight: FontWeight.w500,
-                fontFamily: "Montserrat",
-              ),
-            ),
-            Text(
-              "Location: On the clouds ☁️🖤",
-              style: TextStyle(
-                color: AppColors.white,
-                fontSize: 12,
-                fontWeight: FontWeight.w500,
-                fontFamily: "Montserrat",
-              ),
-            ),
-            Text(
-              "Follow Us",
-              style: TextStyle(
-                color: AppColors.white,
-                fontSize: 16,
-                fontWeight: FontWeight.w700,
-              ),
-            ),
-            Row(
-              spacing: 8,
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                SvgPicture.asset(
-                  "assets/images/social/whatsapp.svg",
-                  color: AppColors.white,
-                  height: 16,
-                  // colorFilter:ColorFilter.mode(AppColors.white, BlendMode.clear) ,
-                ),
-                SvgPicture.asset(
-                  "assets/images/social/facebook_.svg",
-                  color: AppColors.white,
-
-                  height: 16,
-                  // colorFilter:ColorFilter.mode(AppColors.white, BlendMode.clear) ,
-                ),
-                SvgPicture.asset(
-                  "assets/images/social/instagram.svg",
-                  color: AppColors.white,
-                  height: 16,
-
-                  // colorFilter:ColorFilter.mode(AppColors.white, BlendMode.clear) ,
-                ),
-                SvgPicture.asset(
-                  "assets/images/social/tiktok.svg",
-                  color: AppColors.white,
-                  height: 16,
-                  // colorFilter:ColorFilter.mode(AppColors.white, BlendMode.clear) ,
-                ),
-              ],
-            ),
-            // https://wa.me/+201556364646
-            // https://www.instagram.com/carwandough/
-            // https://www.facebook.com/profile.php?id=61568194640512
-            // https://www.tiktok.com/@carwan_dough
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-class HeaderWithLine extends StatelessWidget {
-  const HeaderWithLine({super.key, required this.title});
-  final String title;
-
-  @override
-  Widget build(BuildContext context) {
-    final size = MediaQuery.of(context).size;
-    return Column(
-      children: [
-        Text(
-          title,
-          style: TextStyle(
-            color: AppColors.darkRed,
-            fontSize: 42,
-            fontWeight: FontWeight.w100,
-          ),
-        ),
-        Container(
-          width: size.width / 1.5,
-          height: size.height * 0.005,
-          margin: EdgeInsets.only(top: 10, bottom: 50),
+        );
+      },
+      child: SizedBox(
+        width: size.width * 0.45,
+        child: Container(
           decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(5),
-            gradient: LinearGradient(
-              colors: [
-                AppColors.white,
-                AppColors.red,
-                AppColors.white,
+            boxShadow: [
+              BoxShadow(
+                color: const Color.fromRGBO(216, 27, 50, 0.3),
+                offset: const Offset(0, 8),
+                blurRadius: 12,
+              ),
+            ],
+          ),
+          child: Card(
+            color: AppColors.darkRed,
+            elevation: 0,
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                const SizedBox(height: 8),
+                Text(
+                  item.name,
+                  style: const TextStyle(
+                    color: AppColors.white,
+                    fontSize: 22,
+                    fontWeight: FontWeight.w100,
+                  ),
+                ),
+                const SizedBox(height: 8),
+                ClipRRect(
+                  borderRadius: const BorderRadius.only(
+                    bottomLeft: Radius.circular(12),
+                    bottomRight: Radius.circular(12),
+                  ),
+                  child: CarouselSlider(
+                    options: CarouselOptions(
+                      height: size.height * 0.22,
+                      viewportFraction: 1,
+                      autoPlay: true,
+                      autoPlayInterval: const Duration(seconds: 2),
+                      autoPlayAnimationDuration: const Duration(milliseconds: 500),
+                    ),
+                    items: (item.images).isNotEmpty == true
+                        ? (item.images)
+                            .map(
+                              (image) => Image.asset(
+                                image,
+                                fit: BoxFit.cover,
+                                width: double.infinity,
+                              ),
+                            )
+                            .toList()
+                        : [
+                            Image.asset(
+                              "assets/images/banner.webp",
+                              fit: BoxFit.cover,
+                              width: double.infinity,
+                            )
+                          ],
+                  ),
+                ),
               ],
             ),
           ),
         ),
-      ],
+      ),
     );
   }
 }

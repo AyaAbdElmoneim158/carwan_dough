@@ -1,6 +1,7 @@
 import 'package:carwan_dough/app_navigation_bar.dart';
 import 'package:carwan_dough/utils/app_constant.dart';
 import 'package:carwan_dough/utils/theme/app_theme.dart';
+import 'package:carwan_dough/views/pages/login_page.dart';
 import 'package:flutter/material.dart';
 
 class CarwanDoughApp extends StatelessWidget {
@@ -13,7 +14,7 @@ class CarwanDoughApp extends StatelessWidget {
       title: AppConstant.appName,
       debugShowCheckedModeBanner: false,
       theme: AppTheme.theme,
-      home: AppNavigationBar(),
+      home: LoginPage(),
       // home: const HomePage(),
       // MyHomePage(title: 'Flutter Demo Home Page'),
     );
