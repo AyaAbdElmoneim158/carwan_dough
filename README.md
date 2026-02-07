@@ -12,7 +12,6 @@ Welcome to the Carwan Dough App repository! This Flutter application provides us
   - [Installation](#installation)  
 - [Usage](#usage)  
 - [Dependencies](#dependencies)  
-- [See Also](#see-also)  
 - [Feedback](#feedback)  
 
 ---
@@ -99,11 +98,3 @@ For feedback or questions, reach out at: **[ayhb756@gmail.com](mailto:ayhb756@gm
 [![GitHub](https://img.shields.io/badge/GitHub-100000?style=for-the-badge\&logo=github\&logoColor=white)](https://github.com/AyaAbdElmoneim158)
 [![LinkedIn](https://img.shields.io/badge/LinkedIn-0A66C2?style=for-the-badge\&logo=linkedin\&logoColor=white)](https://www.linkedin.com/in/aya-abdelmoneim/)
 
-```
-
----
-
-If you want, I can also **add a full “Project Structure” section** like your Quran App README, showing all folders and modules, so your GitHub repo looks **fully portfolio-ready and professional**.  
-
-Do you want me to add that?
-```
