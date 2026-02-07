@@ -24,7 +24,8 @@ class MenuItemModel {
       id: map['id'] as String,
       name: map['name'] as String,
       image: map['image'] as String,
-      price: map['price'] as double,
+      // price: map['price'] as double,
+      price: (map['price'] as num).toDouble(), // ✅ FIX
     );
   }
 }

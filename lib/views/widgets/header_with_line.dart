@@ -12,11 +12,10 @@ class HeaderWithLine extends StatelessWidget {
       children: [
         Text(
           title,
-          style: TextStyle(
-            color: AppColors.darkRed,
-            fontSize: 42,
-            fontWeight: FontWeight.w100,
-          ),
+          style: Theme.of(context).textTheme.displaySmall!.copyWith(
+                color: AppColors.darkRed,
+                fontWeight: FontWeight.w500,
+              ),
         ),
         Container(
           width: size.width / 1.5,

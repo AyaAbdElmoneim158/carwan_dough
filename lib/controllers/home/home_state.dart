@@ -5,14 +5,14 @@ sealed class HomeState {}
 
 final class HomeInitial extends HomeState {}
 
-final class HomeLoading extends HomeState {}
+final class FetchingMenuLoading extends HomeState {}
 
-final class HomeLoaded extends HomeState {
-  final List<MenuModel> menu;
-  HomeLoaded(this.menu);
+final class MenuFetched extends HomeState {
+  final List<MenuModel>? menu;
+  MenuFetched(this.menu);
 }
 
-final class HomeError extends HomeState {
+final class FetchingMenuFailure extends HomeState {
   final String error;
-  HomeError(this.error);
+  FetchingMenuFailure(this.error);
 }

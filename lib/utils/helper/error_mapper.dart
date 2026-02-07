@@ -17,6 +17,8 @@ class FirebaseAuthErrorMapper {
         return 'The password is too weak.';
       case 'operation-not-allowed':
         return 'Email/password accounts are not enabled.';
+      case 'no-user':
+        return 'No user is currently signed in';
       default:
         return 'Authentication failed. Please try again.';
     }

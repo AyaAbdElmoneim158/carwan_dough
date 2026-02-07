@@ -5,6 +5,7 @@ class FirestoreHelper {
   FirestoreHelper._();
   static final instance = FirestoreHelper._();
   final _fireStore = FirebaseFirestore.instance;
+
   Future<void> setData({
     required String path,
     required Map<String, dynamic> data,
@@ -14,17 +15,17 @@ class FirestoreHelper {
     await reference.set(data);
   }
 
+  // 🔥 New method: Set data with merge
   Future<void> setDataWithMerge({
     required String path,
     required Map<String, dynamic> data,
-    // bool merge = false,
   }) async {
     final reference = _fireStore.doc(path);
-    debugPrint('Request Data: $data');
+    debugPrint('Request Data with Merge: $data');
 
     await reference.set(
       data,
-      SetOptions(merge: true), //merge),
+      SetOptions(merge: true), // Merge with existing data
     );
   }
 

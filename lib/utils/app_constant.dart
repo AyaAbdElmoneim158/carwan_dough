@@ -1,5 +1,8 @@
+enum Role { client, admin }
+
 class AppConstant {
   static const String appName = "carwan_dough";
+  static const double heightNav = 105;
 }
 
 List<Map<String, Object>> menuItems = [

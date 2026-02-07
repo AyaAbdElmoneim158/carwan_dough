@@ -8,76 +8,66 @@ class BannerWithWaves extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
+
     return SizedBox(
-      height: size.height * 0.4,
-      child: Column(
+      height: size.height * 0.37, // total banner height
+      child: Stack(
         children: [
+          /// 🔴 Red Banner
           Container(
-            height: size.height * 0.31,
+            height: size.height * 0.3,
             padding: EdgeInsets.all(size.width * 0.05),
-            decoration: BoxDecoration(
-              color: AppColors.red,
-            ),
+            color: AppColors.red,
             child: Center(
               child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   Expanded(
                     child: Text(
-                      "sugar, spice and\neverything nice",
-                      style: TextStyle(
-                        color: AppColors.white,
-                        fontSize: 38,
-                        fontWeight: FontWeight.w100,
-                      ),
+                      "sugar, spice and everything nice",
+                      style: Theme.of(context).textTheme.displayMedium!.copyWith(
+                            color: AppColors.white,
+                            fontWeight: FontWeight.w700,
+                          ),
                     ),
                   ),
+
+                  /// 🍰 Animated images
                   Column(
                     mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Image.asset(
                             "assets/images/cake1.png",
                             height: size.height * 0.065,
-                          ).upDown(
-                            offset: 10,
-                            duration: const Duration(seconds: 1),
-                            // phase: 0.3,
-                          ),
+                          ).upDown(offset: 10, duration: const Duration(seconds: 1)),
                           const SizedBox(width: 8),
                           Image.asset(
                             "assets/images/cina3.png",
                             height: size.height * 0.04,
-                          ).upDown(
-                            offset: 12,
-                            duration: const Duration(seconds: 2),
-                            // phase: 0.6,
-                          ),
+                          ).upDown(offset: 12, duration: const Duration(seconds: 2)),
                         ],
                       ),
                       Image.asset(
                         "assets/images/doug8.png",
                         height: size.height * 0.065,
-                      ).upDown(
-                        offset: 14,
-                        duration: const Duration(seconds: 3),
-                        // phase: 0.0,
-                      ),
+                      ).upDown(offset: 14, duration: const Duration(seconds: 3)),
                     ],
                   ),
                 ],
               ),
             ),
           ),
-          Expanded(
+
+          /// 🌊 Wave at Bottom
+          Positioned(
+            bottom: 0,
+            left: 0,
+            right: 0,
             child: Image.asset(
               "assets/images/waves.png",
               fit: BoxFit.cover,
-              width: double.infinity,
+              height: size.height * 0.08,
             ),
           ),
         ],

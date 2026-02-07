@@ -1,10 +1,10 @@
 import 'dart:math';
 
-import 'package:carwan_dough/app_navigation_bar.dart';
+import 'package:carwan_dough/role_based_navigation_bar.dart';
 import 'package:carwan_dough/controllers/auth/auth_cubit.dart';
 import 'package:carwan_dough/utils/theme/app_colors.dart';
-import 'package:carwan_dough/views/pages/home_page.dart';
 import 'package:carwan_dough/views/pages/signup_page.dart';
+import 'package:carwan_dough/views/widgets/app_card.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -15,19 +15,19 @@ class LoginPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
+    final authCubit = context.read<AuthCubit>();
     final formKey = GlobalKey<FormState>();
-    final TextEditingController emailController = TextEditingController();
-    final TextEditingController passwordController = TextEditingController();
+    final emailController = TextEditingController();
+    final passwordController = TextEditingController();
 
-    return BlocProvider(
-      create: (context) => AuthCubit(),
-      child: Scaffold(
-        body: Stack(
-          alignment: AlignmentDirectional.topStart,
-          children: [
-            Container(
-              width: double.infinity,
-              height: double.infinity,
+    return Scaffold(
+      resizeToAvoidBottomInset: true,
+      body: Stack(
+        alignment: Alignment.topLeft,
+        children: [
+          // ✅ Gradient fills full screen
+          Positioned.fill(
+            child: Container(
               decoration: BoxDecoration(
                 gradient: LinearGradient(
                   transform: const GradientRotation(75 * pi / 180),
@@ -38,150 +38,134 @@ class LoginPage extends StatelessWidget {
                 ),
               ),
             ),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Image.asset(
-                "assets/images/logo.png",
-                height: size.height * 0.08,
-              ),
+          ),
+          Positioned(
+            top: MediaQuery.of(context).padding.top + 12,
+            left: MediaQuery.of(context).padding.top + 12,
+            // right: 0,
+            child: Image.asset(
+              "assets/images/logo.png",
+              height: size.height * 0.08,
             ),
-            // ),
-            Center(
-              child: ConstrainedBox(
-                constraints: const BoxConstraints(
-                  maxWidth: 420, // 👈 limits width on tablets/web
-                ),
-                child: Container(
-                  margin: EdgeInsets.symmetric(horizontal: size.width * 0.05),
-                  padding: EdgeInsets.all(24),
-                  decoration: BoxDecoration(
-                    color: AppColors.white,
-                    borderRadius: BorderRadius.circular(12),
-                    //Todo:  boxShadow:
-                  ),
-                  child: Form(
-                    key: formKey,
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      // spacing: 16,
-                      children: [
-                        Text(
-                          "Login",
-                          textAlign: TextAlign.center,
-                          style: Theme.of(context).textTheme.headlineSmall!.copyWith(
-                                color: AppColors.red,
+          ),
+          SafeArea(
+            child: LayoutBuilder(
+              builder: (context, constraints) {
+                return SingleChildScrollView(
+                  keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
+                  child: ConstrainedBox(
+                    constraints: BoxConstraints(
+                      minHeight: constraints.maxHeight,
+                    ),
+                    child: Center(
+                      child: AppCard(
+                        scrollable: false,
+                        child: Form(
+                          key: formKey,
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              const SizedBox(height: 8),
+                              Text(
+                                "Login",
+                                style: Theme.of(context).textTheme.headlineSmall!.copyWith(color: AppColors.red),
                               ),
-                        ),
-                        SizedBox(height: 16),
-                        SizedBox(
-                          height: 42,
-                          child: TextFormField(
-                            controller: emailController,
-                            validator: (val) => (val == null || val.isEmpty) ? "Enter your email,please...!" : null, //Todo: file validation
+                              const SizedBox(height: 16),
+                              TextFormField(
+                                controller: emailController,
+                                validator: (val) => val == null || val.isEmpty ? "Enter your email" : null,
+                                decoration: const InputDecoration(labelText: "Email"),
+                              ),
+                              const SizedBox(height: 12),
+                              TextFormField(
+                                controller: passwordController,
+                                validator: (val) => val == null || val.isEmpty ? "Enter your password" : null,
+                                decoration: const InputDecoration(
+                                  labelText: "Password",
+                                ),
+                                obscureText: true,
+                              ),
+                              const SizedBox(height: 16),
+                              BlocConsumer<AuthCubit, AuthState>(
+                                listener: (context, state) {
+                                  if (state is AuthUnauthenticated) {
+                                    showDialog(
+                                      context: context,
+                                      builder: (_) => AlertDialog(
+                                        title: const Text('Error'),
+                                        content: Text(state.error),
+                                        actions: [
+                                          TextButton(
+                                            onPressed: () => Navigator.pop(context),
+                                            child: const Text('OK'),
+                                          ),
+                                        ],
+                                      ),
+                                    );
+                                  } else if (state is AuthAuthenticated) {
+                                    Navigator.pushReplacement(
+                                      context,
+                                      CupertinoPageRoute(
+                                        builder: (_) => RoleBasedNavigationBar(
+                                          role: context.read<AuthCubit>().user.role,
+                                        ),
+                                      ),
+                                    );
+                                  }
+                                },
+                                builder: (context, state) {
+                                  final isLoading = state is AuthLoading;
 
-                            decoration: InputDecoration(labelText: "Email"),
-                          ),
-                        ),
-                        SizedBox(height: 12),
-                        SizedBox(
-                          height: 42,
-                          child: TextFormField(
-                            controller: passwordController,
-                            validator: (val) => (val == null || val.isEmpty) ? "Enter your password,please...!" : null, //Todo: file validation
-                            //Todo: eye
-                            decoration: InputDecoration(labelText: "Password"),
-                          ),
-                        ),
-                        SizedBox(height: 12),
-                        BlocConsumer<AuthCubit, AuthState>(
-                          //Todo: listenWhen: (previous, current) => ,
-                          //Todo:  buildWhen: (previous, current) => ,
-                          listener: (context, state) {
-                            if (state is AuthError) {
-                              // ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(state.error)));
-                              showDialog(
-                                //Todo: like
-                                context: context,
-                                builder: (_) => AlertDialog(
-                                  title: Text('Error'),
-                                  content: Text(state.error),
-                                  actions: [
-                                    TextButton(
-                                      onPressed: () => Navigator.pop(context),
-                                      child: Text('OK'),
+                                  return SizedBox(
+                                    width: double.infinity,
+                                    height: 42,
+                                    child: ElevatedButton(
+                                      onPressed: isLoading
+                                          ? null
+                                          : () {
+                                              if (formKey.currentState!.validate()) {
+                                                authCubit.login(
+                                                  emailController.text,
+                                                  passwordController.text,
+                                                );
+                                              }
+                                            },
+                                      child: isLoading ? const CupertinoActivityIndicator() : const Text("Login"),
                                     ),
-                                  ],
-                                ),
-                              );
-                            } else if (state is AuthLoaded) {
-                              Navigator.pushReplacement(
-                                context,
-                                CupertinoPageRoute<void>(
-                                  builder: (context) => const AppNavigationBar(),
-                                ),
-                              );
-                            }
-                          },
-
-                          builder: (context, state) {
-                            return SizedBox(
-                              height: 42,
-                              width: double.infinity,
-                              child: ElevatedButton(
-                                onPressed: (state is AuthLoading)
-                                    ? null
-                                    : () async {
-                                        if (formKey.currentState!.validate()) {
-                                          await context.read<AuthCubit>().login(
-                                                emailController.text,
-                                                passwordController.text,
-                                              );
-                                        }
-                                      },
-                                child: (state is AuthLoading) ? CupertinoActivityIndicator() : Text("Login"),
+                                  );
+                                },
                               ),
-                            );
-                          },
-                        ),
-                        SizedBox(height: 16),
-                        Text(
-                          "Forget password?",
-                          textAlign: TextAlign.center,
-                          style: Theme.of(context).textTheme.titleSmall!.copyWith(
-                                color: AppColors.red,
-                                fontWeight: FontWeight.w500,
-                                // fontFamily: "Montserrat",
+                              const SizedBox(height: 16),
+                              Text(
+                                "Forget password?",
+                                style: Theme.of(context).textTheme.titleSmall!.copyWith(color: AppColors.red),
                               ),
-                        ),
-                        SizedBox(height: 4),
-                        InkWell(
-                          onTap: () {
-                            Navigator.push(
-                              context,
-                              CupertinoPageRoute<void>(
-                                builder: (context) => const SignupPage(),
-                              ),
-                            );
-                          },
-                          child: Text(
-                            "Or Signup",
-                            textAlign: TextAlign.center,
-                            style: Theme.of(context).textTheme.labelSmall!.copyWith(
-                                  color: AppColors.red,
-                                  fontWeight: FontWeight.w500,
-                                  // fontFamily: "Montserrat",
+                              const SizedBox(height: 6),
+                              InkWell(
+                                onTap: () {
+                                  Navigator.push(
+                                    context,
+                                    CupertinoPageRoute(
+                                      builder: (_) => const SignupPage(),
+                                    ),
+                                  );
+                                },
+                                child: Text(
+                                  "Or Signup",
+                                  style: Theme.of(context).textTheme.labelSmall!.copyWith(color: AppColors.red),
                                 ),
+                              ),
+                            ],
                           ),
                         ),
-                      ],
+                      ),
                     ),
                   ),
-                ),
-              ),
+                );
+              },
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
